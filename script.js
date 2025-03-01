@@ -143,37 +143,36 @@ document.addEventListener('DOMContentLoaded', () => {
           const td = document.createElement('td');
           field = field.trim();
 
-          // Convert time columns to 12-hour format
+          // If this is a time column, convert to 12-hour format.
           if (index === startTimeIndex || index === endTimeIndex) {
             field = convertTo12Hour(field);
           }
 
           if (index === classNameIndex) {
-            td.classList.add('text-right');
+            td.classList.add('text-right');  // Class Name: right aligned
             td.style.width = `${colWidths.className}px`;
             td.style.minWidth = `${colWidths.className}px`;
+            // Set text color based on whether the class is ongoing:
             td.style.color = (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) ? "green" : "black";
             td.textContent = field;
           } else if (index === teacherIndex) {
-            td.classList.add('text-center');
+            td.classList.add('text-center');  // Teacher: center aligned
             td.style.width = `${colWidths.teacher}px`;
             td.style.minWidth = `${colWidths.teacher}px`;
             td.textContent = field;
           } else if (index === startTimeIndex || index === endTimeIndex) {
-            td.classList.add('text-center');
+            td.classList.add('text-center');  // Start/End Time: center aligned
             td.style.width = `${colWidths.time}px`;
             td.style.minWidth = `${colWidths.time}px`;
             td.textContent = field;
           } else if (index === classroomIndex) {
-            td.classList.add('text-center');
+            td.classList.add('text-center');  // Center the badge in the cell
             td.style.width = `${colWidths.classroom}px`;
             td.style.minWidth = `${colWidths.classroom}px`;
             // Create a badge with a fixed-size square background, centered within the cell.
             const badge = document.createElement('span');
             let bgColor = field.toLowerCase() === "lobby" ? "#3e424B" : field.toLowerCase();
             badge.style.backgroundColor = bgColor;
-            // Use white text if needed, but since we're removing the text, this is optional.
-            badge.style.color = "white";
             badge.style.display = "inline-block";
             // Set the badge dimensions to match the cell width for uniformity.
             badge.style.width = `${colWidths.classroom}px`;
@@ -181,9 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.style.lineHeight = "25px";
             badge.style.textAlign = "center";
             badge.style.borderRadius = "3px";
-            badge.style.margin = "0 auto"; // Center badge horizontally within the cell
-            // Remove text content so that only the colored badge is visible:
-            // badge.textContent = field; <-- removed
+            badge.style.margin = "0 auto"; // Center the badge horizontally
+            // Remove text content so only the badge is visible.
             td.appendChild(badge);
           } else {
             td.textContent = field;
@@ -196,6 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Insert the table into the page
       document.getElementById('data-table').appendChild(table);
+      
+      // Auto-refresh the page every 60 seconds to update class schedules
+      setInterval(() => {
+        window.location.reload();
+      }, 60000);
     })
     .catch(error => {
       console.error('Error loading CSV data:', error);
