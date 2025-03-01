@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const endTimeIndex = headers.findIndex(h => h.toLowerCase() === "end time");
       const classroomIndex = headers.findIndex(h => h.toLowerCase() === "classroom");
 
+      // Define desired column widths (in pixels)
+      const colWidths = {
+        className: 100,
+        teacher: 120,
+        time: 100,
+        classroom: 80
+      };
+
       // Create a table element with Bootstrap classes
       const table = document.createElement('table');
       table.className = 'table table-striped table-bordered';
@@ -54,17 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Set fixed widths and minimum widths for specific columns:
         if (index === classNameIndex) {
-          th.style.width = "100px";
-          th.style.minWidth = "100px";
+          th.style.width = `${colWidths.className}px`;
+          th.style.minWidth = `${colWidths.className}px`;
         } else if (index === teacherIndex) {
-          th.style.width = "120px";
-          th.style.minWidth = "120px";
+          th.style.width = `${colWidths.teacher}px`;
+          th.style.minWidth = `${colWidths.teacher}px`;
         } else if (index === startTimeIndex || index === endTimeIndex) {
-          th.style.width = "100px";
-          th.style.minWidth = "100px";
+          th.style.width = `${colWidths.time}px`;
+          th.style.minWidth = `${colWidths.time}px`;
         } else if (index === classroomIndex) {
-          th.style.width = "80px";
-          th.style.minWidth = "80px";
+          th.style.width = `${colWidths.classroom}px`;
+          th.style.minWidth = `${colWidths.classroom}px`;
         }
         headerRow.appendChild(th);
       });
@@ -130,59 +138,58 @@ document.addEventListener('DOMContentLoaded', () => {
           tr.classList.add('ended');
         }
 
-        // Process each cell in the row with alignment, formatting, and width rules
+        // Process each cell in the row with alignment, formatting, and fixed widths
         record.forEach((field, index) => {
           const td = document.createElement('td');
           field = field.trim();
 
-          // If this is a time column, convert to 12-hour format.
+          // Convert time columns to 12-hour format
           if (index === startTimeIndex || index === endTimeIndex) {
             field = convertTo12Hour(field);
           }
 
-          // Apply alignment and fixed widths based on column type:
           if (index === classNameIndex) {
-            td.classList.add('text-right');  // Class Name: right aligned
-            td.style.width = "100px";
-            td.style.minWidth = "100px";
-            // Set text color based on whether the class is ongoing:
-            if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
-              td.style.color = "green";
-            } else {
-              td.style.color = "black";
-            }
+            td.classList.add('text-right');
+            td.style.width = `${colWidths.className}px`;
+            td.style.minWidth = `${colWidths.className}px`;
+            td.style.color = (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) ? "green" : "black";
             td.textContent = field;
           } else if (index === teacherIndex) {
-            td.classList.add('text-center');  // Teacher: center aligned
-            td.style.width = "120px";
-            td.style.minWidth = "120px";
+            td.classList.add('text-center');
+            td.style.width = `${colWidths.teacher}px`;
+            td.style.minWidth = `${colWidths.teacher}px`;
             td.textContent = field;
           } else if (index === startTimeIndex || index === endTimeIndex) {
-            td.classList.add('text-center');  // Start/End Time: center aligned
-            td.style.width = "100px";
-            td.style.minWidth = "100px";
+            td.classList.add('text-center');
+            td.style.width = `${colWidths.time}px`;
+            td.style.minWidth = `${colWidths.time}px`;
             td.textContent = field;
           } else if (index === classroomIndex) {
-            td.classList.add('text-left');    // Classroom: left aligned
-            td.style.width = "80px";
-            td.style.minWidth = "80px";
-            // For the Classroom column, create a badge with a background color.
+            td.classList.add('text-center');
+            td.style.width = `${colWidths.classroom}px`;
+            td.style.minWidth = `${colWidths.classroom}px`;
+            // Create a badge with a fixed-size square background, centered within the cell.
             const badge = document.createElement('span');
-            // If "lobby", use silver; otherwise, use the classroom name as the color.
-            let bgColor = field.toLowerCase() === "lobby" ? "silver" : field.toLowerCase();
-            badge.textContent = field;
+            let bgColor = field.toLowerCase() === "lobby" ? "#3e424B" : field.toLowerCase();
             badge.style.backgroundColor = bgColor;
-            // Keep the classroom badge text color as black.
-            badge.style.color = "black";
-            badge.style.padding = "5px 10px";
+            // Use white text if needed, but since we're removing the text, this is optional.
+            badge.style.color = "white";
+            badge.style.display = "inline-block";
+            // Set the badge dimensions to match the cell width for uniformity.
+            badge.style.width = `${colWidths.classroom}px`;
+            badge.style.height = "25px";
+            badge.style.lineHeight = "25px";
+            badge.style.textAlign = "center";
             badge.style.borderRadius = "3px";
+            badge.style.margin = "0 auto"; // Center badge horizontally within the cell
+            // Remove text content so that only the colored badge is visible:
+            // badge.textContent = field; <-- removed
             td.appendChild(badge);
           } else {
             td.textContent = field;
           }
           tr.appendChild(td);
         });
-
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);

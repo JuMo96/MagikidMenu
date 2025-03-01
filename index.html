@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Class Schedules</title>
-  <!-- Bootstrap CSS for styling -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Custom styles -->
+  <!-- Bootstrap CSS for responsiveness -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
+    /* Animated gradient background for a cool shader effect */
     body {
-      background-color: #f8f9fa;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(-45deg, #dfdfdf, #1100ff, #131313, #003ee7);
+      background-size: 400% 400%;
+      animation: gradientBG 30s ease infinite;
     }
-    h1 {
-      margin-top: 20px;
-      margin-bottom: 40px;
-      color: #343a40;
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    #data-table {
-      background-color: #fff;
+    /* Container for the table with a semi-transparent white background */
+    .table-container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow-x: auto;
+      margin: 20px auto;
+      max-width: 800px;
     }
-    /* Fixed table layout to control column widths */
+    /* Table styling */
     table {
       table-layout: fixed;
       width: 100%;
     }
-    table th, table td {
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    th {
+      background: #007bff;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      border-top: none;
+      border-bottom: 2px solid #0056b3;
+      padding: 10px;
     }
-    /* Style for classes that have ended */
-    .ended {
+    td {
+      vertical-align: middle;
+      padding: 8px;
+    }
+    /* Strike-through for ended classes */
+    tr.ended td {
       text-decoration: line-through;
       color: #6c757d;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center">Class Schedules</h1>
-    <div id="data-table" class="table-responsive"></div>
-  </div>
+  <div id="data-table" class="table-container"></div>
   <script src="script.js"></script>
 </body>
 </html>
-  
