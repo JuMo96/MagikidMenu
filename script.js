@@ -52,15 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
         th.textContent = header;
         th.style.textAlign = "center";  // center align header text
         
-        // Set fixed widths for specific columns:
+        // Set fixed widths and minimum widths for specific columns:
         if (index === classNameIndex) {
-          th.style.width = "100px";  // smaller Class Name column
+          th.style.width = "100px";
+          th.style.minWidth = "100px";
         } else if (index === teacherIndex) {
-          th.style.width = "120px";  // larger Teacher column
+          th.style.width = "120px";
+          th.style.minWidth = "120px";
         } else if (index === startTimeIndex || index === endTimeIndex) {
-          th.style.width = "100px";  // slightly larger Start/End Time columns
+          th.style.width = "100px";
+          th.style.minWidth = "100px";
         } else if (index === classroomIndex) {
-          th.style.width = "80px";   // smaller Classroom column
+          th.style.width = "80px";
+          th.style.minWidth = "80px";
         }
         headerRow.appendChild(th);
       });
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (index === classNameIndex) {
             td.classList.add('text-right');  // Class Name: right aligned
             td.style.width = "100px";
+            td.style.minWidth = "100px";
             // Set text color based on whether the class is ongoing:
             if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
               td.style.color = "green";
@@ -150,21 +155,24 @@ document.addEventListener('DOMContentLoaded', () => {
           } else if (index === teacherIndex) {
             td.classList.add('text-center');  // Teacher: center aligned
             td.style.width = "120px";
+            td.style.minWidth = "120px";
             td.textContent = field;
           } else if (index === startTimeIndex || index === endTimeIndex) {
             td.classList.add('text-center');  // Start/End Time: center aligned
             td.style.width = "100px";
+            td.style.minWidth = "100px";
             td.textContent = field;
           } else if (index === classroomIndex) {
             td.classList.add('text-left');    // Classroom: left aligned
             td.style.width = "80px";
+            td.style.minWidth = "80px";
             // For the Classroom column, create a badge with a background color.
             const badge = document.createElement('span');
             // If "lobby", use silver; otherwise, use the classroom name as the color.
             let bgColor = field.toLowerCase() === "lobby" ? "silver" : field.toLowerCase();
             badge.textContent = field;
             badge.style.backgroundColor = bgColor;
-            // Keep the text color in the classroom badge as black
+            // Keep the classroom badge text color as black.
             badge.style.color = "black";
             badge.style.padding = "5px 10px";
             badge.style.borderRadius = "3px";
