@@ -136,31 +136,36 @@ document.addEventListener('DOMContentLoaded', () => {
             field = convertTo12Hour(field);
           }
 
-          // Apply alignment based on column type and set fixed widths:
+          // Apply alignment and fixed widths based on column type:
           if (index === classNameIndex) {
             td.classList.add('text-right');  // Class Name: right aligned
             td.style.width = "100px";
+            // Set text color based on whether the class is ongoing:
+            if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
+              td.style.color = "green";
+            } else {
+              td.style.color = "black";
+            }
+            td.textContent = field;
           } else if (index === teacherIndex) {
             td.classList.add('text-center');  // Teacher: center aligned
             td.style.width = "120px";
+            td.textContent = field;
           } else if (index === startTimeIndex || index === endTimeIndex) {
             td.classList.add('text-center');  // Start/End Time: center aligned
             td.style.width = "100px";
+            td.textContent = field;
           } else if (index === classroomIndex) {
             td.classList.add('text-left');    // Classroom: left aligned
             td.style.width = "80px";
-          }
-
-          // For the Classroom column, create a badge with a background color.
-          if (index === classroomIndex) {
+            // For the Classroom column, create a badge with a background color.
             const badge = document.createElement('span');
             // If "lobby", use silver; otherwise, use the classroom name as the color.
             let bgColor = field.toLowerCase() === "lobby" ? "silver" : field.toLowerCase();
-            // Set the text color to black for all classroom badges.
-            let textColor = "black";
             badge.textContent = field;
             badge.style.backgroundColor = bgColor;
-            badge.style.color = textColor;
+            // Keep the text color in the classroom badge as black
+            badge.style.color = "black";
             badge.style.padding = "5px 10px";
             badge.style.borderRadius = "3px";
             td.appendChild(badge);
