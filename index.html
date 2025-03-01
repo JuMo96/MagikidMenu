@@ -22,6 +22,18 @@
       padding: 20px;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+    /* Fixed table layout to control column widths */
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+    table th, table td {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     /* Style for classes that have ended */
     .ended {
@@ -33,8 +45,9 @@
 <body>
   <div class="container">
     <h1 class="text-center">Class Schedules</h1>
-    <div id="data-table"></div>
+    <div id="data-table" class="table-responsive"></div>
   </div>
   <script src="script.js"></script>
 </body>
 </html>
+  
