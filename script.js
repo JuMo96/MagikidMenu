@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Helper function to convert "HH:MM" 24H time to "H:MM AM/PM" format
+  // Helper: Convert 24H "HH:MM" to 12H "H:MM AM/PM"
   function convertTo12Hour(timeStr) {
     const parts = timeStr.split(':');
-    if (parts.length < 2) return timeStr; // return original if not valid
+    if (parts.length < 2) return timeStr;
     let hour = parseInt(parts[0], 10);
     const minute = parts[1];
     const ampm = hour >= 12 ? "PM" : "AM";
@@ -11,25 +11,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${hour}:${minute} ${ampm}`;
   }
 
-  // Determine the current day of the week (e.g., "monday", "tuesday", etc.)
+  // Vibrant color mapping for classrooms with improved saturation.
+  const vibrantColors = {
+    lobby: "#C0C0C0",   // Bright silver for lobby
+    blue: "#007BFF",    // Vibrant blue
+    orange: "#FF8C00",  // Bright orange
+    green: "#28A745",   // Bold green
+    red: "#DC3545",     // Vivid red
+    purple: "#6F42C1",  // Strong purple
+    yellow: "#FFFF00",  // Bright yellow
+    default: "#17A2B8"  // Vibrant teal as default
+  };
+
+  // Determine the current day and use that CSV file (e.g., monday.csv)
   const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const currentDay = dayNames[new Date().getDay()];
-  // Use the current day's CSV file (e.g., monday.csv)
   const csvFile = `${currentDay}.csv`;
 
   fetch(csvFile)
     .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
       return response.text();
     })
     .then(data => {
-      // Use tab delimiter if present, else use comma
+      // Determine delimiter: tab vs comma
       const delimiter = data.includes("\t") ? "\t" : ",";
       const rows = data.trim().split('\n').map(row => row.split(delimiter));
       if (rows.length === 0) return;
-
       const headers = rows[0].map(h => h.trim());
       const records = rows.slice(1);
 
@@ -40,58 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const endTimeIndex = headers.findIndex(h => h.toLowerCase() === "end time");
       const classroomIndex = headers.findIndex(h => h.toLowerCase() === "classroom");
 
-      // Define desired column widths (in pixels)
-      const colWidths = {
-        className: 100,
-        teacher: 120,
-        time: 100,
-        classroom: 80
-      };
-
-      // Create a table element with Bootstrap classes
-      const table = document.createElement('table');
-      table.className = 'table table-striped table-bordered';
-
-      // Build the table header (center align all header cells)
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      headers.forEach((header, index) => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        th.style.textAlign = "center";  // center align header text
-        
-        // Set fixed widths and minimum widths for specific columns:
-        if (index === classNameIndex) {
-          th.style.width = `${colWidths.className}px`;
-          th.style.minWidth = `${colWidths.className}px`;
-        } else if (index === teacherIndex) {
-          th.style.width = `${colWidths.teacher}px`;
-          th.style.minWidth = `${colWidths.teacher}px`;
-        } else if (index === startTimeIndex || index === endTimeIndex) {
-          th.style.width = `${colWidths.time}px`;
-          th.style.minWidth = `${colWidths.time}px`;
-        } else if (index === classroomIndex) {
-          th.style.width = `${colWidths.classroom}px`;
-          th.style.minWidth = `${colWidths.classroom}px`;
-        }
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      // Current time for filtering (assumes classes are scheduled for today)
+      // Get containers for each section
+      const ongoingContainer = document.getElementById('ongoing-container');
+      const upcomingContainer = document.getElementById('upcoming-container');
       const now = new Date();
-      // 2.5 hours ahead in milliseconds
       const twoAndHalfHoursInMs = 2.5 * 60 * 60 * 1000;
       const thirtyMinutesInMs = 30 * 60 * 1000;
 
-      // Build the table body
-      const tbody = document.createElement('tbody');
       records.forEach(record => {
-        // Skip empty rows
         if (record.length === 1 && record[0].trim() === "") return;
 
-        // Parse the start and end times (assuming "HH:MM" format)
+        // Parse start and end times (assuming "HH:MM" format)
         let startTimeDate, endTimeDate;
         if (startTimeIndex !== -1) {
           const startTimeStr = record[startTimeIndex].trim();
@@ -120,88 +87,55 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Filter out classes that start 2.5 hours (or more) ahead
-        if (startTimeDate && (startTimeDate.getTime() - now.getTime()) >= twoAndHalfHoursInMs) {
-          return;
+        // Remove classes that have concluded (current time is past the end time)
+        if (endTimeDate && now >= endTimeDate) return;
+
+        // Create a card for the class
+        const card = document.createElement('div');
+        card.className = 'class-card';
+
+        // Set card background using classroom mapping (fallback to default)
+        let classroomVal = (classroomIndex !== -1) ? record[classroomIndex].trim().toLowerCase() : "";
+        let bgColor = vibrantColors[classroomVal] || vibrantColors.default;
+        card.style.backgroundColor = bgColor;
+
+        // Create overlay content for text details
+        const content = document.createElement('div');
+        content.className = 'card-content';
+
+        // Class Name header (green if ongoing)
+        const title = document.createElement('h3');
+        title.textContent = record[classNameIndex];
+        if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
+          title.style.color = "green";
         }
+        content.appendChild(title);
 
-        // Filter out classes that ended more than 30 minutes ago
-        if (endTimeDate && now.getTime() > endTimeDate.getTime() + thirtyMinutesInMs) {
-          return;
+        // Teacher detail (remove "Teacher: " prefix)
+        const teacher = document.createElement('p');
+        teacher.textContent = record[teacherIndex];
+        content.appendChild(teacher);
+
+        // Time detail (remove "Time: " prefix)
+        const timeDetail = document.createElement('p');
+        timeDetail.textContent = `${convertTo12Hour(record[startTimeIndex].trim())} - ${convertTo12Hour(record[endTimeIndex].trim())}`;
+        content.appendChild(timeDetail);
+
+        card.appendChild(content);
+
+        // Categorize card into ongoing or upcoming:
+        if (startTimeDate && now >= startTimeDate && now < endTimeDate) {
+          ongoingContainer.appendChild(card);
+        } else if (startTimeDate && now < startTimeDate && (startTimeDate.getTime() - now.getTime()) < twoAndHalfHoursInMs) {
+          upcomingContainer.appendChild(card);
         }
-
-        // Create table row
-        const tr = document.createElement('tr');
-
-        // Mark classes as ended if current time is past the end time (but within the 30-minute grace period)
-        if (endTimeDate && now.getTime() > endTimeDate.getTime()) {
-          tr.classList.add('ended');
-        }
-
-        // Process each cell in the row with alignment, formatting, and fixed widths
-        record.forEach((field, index) => {
-          const td = document.createElement('td');
-          field = field.trim();
-
-          // If this is a time column, convert to 12-hour format.
-          if (index === startTimeIndex || index === endTimeIndex) {
-            field = convertTo12Hour(field);
-          }
-
-          if (index === classNameIndex) {
-            td.classList.add('text-right');  // Class Name: right aligned
-            td.style.width = `${colWidths.className}px`;
-            td.style.minWidth = `${colWidths.className}px`;
-            // Set text color based on whether the class is ongoing:
-            td.style.color = (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) ? "green" : "black";
-            td.textContent = field;
-          } else if (index === teacherIndex) {
-            td.classList.add('text-center');  // Teacher: center aligned
-            td.style.width = `${colWidths.teacher}px`;
-            td.style.minWidth = `${colWidths.teacher}px`;
-            td.textContent = field;
-          } else if (index === startTimeIndex || index === endTimeIndex) {
-            td.classList.add('text-center');  // Start/End Time: center aligned
-            td.style.width = `${colWidths.time}px`;
-            td.style.minWidth = `${colWidths.time}px`;
-            td.textContent = field;
-          } else if (index === classroomIndex) {
-            td.classList.add('text-center');  // Center the badge in the cell
-            td.style.width = `${colWidths.classroom}px`;
-            td.style.minWidth = `${colWidths.classroom}px`;
-            // Create a badge with a fixed-size square background, centered within the cell.
-            const badge = document.createElement('span');
-            let bgColor = field.toLowerCase() === "lobby" ? "#3e424B" : field.toLowerCase();
-            badge.style.backgroundColor = bgColor;
-            badge.style.display = "inline-block";
-            // Set the badge dimensions to match the cell width for uniformity.
-            badge.style.width = `${colWidths.classroom}px`;
-            badge.style.height = "25px";
-            badge.style.lineHeight = "25px";
-            badge.style.textAlign = "center";
-            badge.style.borderRadius = "3px";
-            badge.style.margin = "0 auto"; // Center the badge horizontally
-            // Remove text content so only the badge is visible.
-            td.appendChild(badge);
-          } else {
-            td.textContent = field;
-          }
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
       });
-      table.appendChild(tbody);
 
-      // Insert the table into the page
-      document.getElementById('data-table').appendChild(table);
-      
-      // Auto-refresh the page every 60 seconds to update class schedules
-      setInterval(() => {
-        window.location.reload();
-      }, 60000);
+      // Auto-refresh every 60 seconds
+      setInterval(() => window.location.reload(), 60000);
     })
     .catch(error => {
       console.error('Error loading CSV data:', error);
-      document.getElementById('data-table').textContent = 'Failed to load data. Please check the file path.';
+      document.getElementById('data-container').textContent = 'Failed to load data. Please check the file path.';
     });
 });

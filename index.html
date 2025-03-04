@@ -4,59 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Class Schedules</title>
-  <!-- Bootstrap CSS for responsiveness -->
+  <!-- Google Fonts: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Optional: Bootstrap for base styling -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
-    /* Animated gradient background for a cool shader effect */
+    /* Company colors gradient: Black, Blue, and White */
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(-45deg, #dfdfdf, #1100ff, #131313, #003ee7);
+      padding: 20px;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(45deg, #000000, #007BFF, #ffffff);
       background-size: 400% 400%;
-      animation: gradientBG 30s ease infinite;
+      animation: gradientBG 15s ease infinite;
+      color: #333;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    /* Container for the table with a semi-transparent white background */
-    .table-container {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-    }
-    /* Table styling */
-    table {
-      table-layout: fixed;
-      width: 100%;
-    }
-    th {
-      background: #007bff;
-      color: #fff;
-      font-weight: bold;
+    /* Section headers */
+    .section-header {
       text-align: center;
-      border-top: none;
-      border-bottom: 2px solid #0056b3;
-      padding: 10px;
+      margin: 30px 0 15px;
+      font-size: 2em;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
-    td {
-      vertical-align: middle;
+    /* Grid container for cards */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    /* Each card is a square */
+    .class-card {
+      position: relative;
+      width: 100%;
+      padding-top: 100%; /* Enforces square aspect ratio */
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    /* Overlay for card text with reduced opacity for vibrancy */
+    .card-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
       padding: 8px;
+      transition: background 0.3s ease;
     }
-    /* Strike-through for ended classes */
-    tr.ended td {
-      text-decoration: line-through;
-      color: #6c757d;
+    .card-content h3 {
+      margin: 0 0 8px;
+      font-size: 1.5em;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+    .card-content p {
+      margin: 4px 0;
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    }
+    .class-card:hover .card-content {
+      background: rgba(0,0,0,0.45);
     }
   </style>
 </head>
 <body>
-  <div id="data-table" class="table-container"></div>
+  <!-- Ongoing Classes Section -->
+  <div id="ongoing-section">
+    <h2 class="section-header">Ongoing Classes</h2>
+    <div id="ongoing-container" class="grid-container"></div>
+  </div>
+  <!-- Upcoming Classes Section -->
+  <div id="upcoming-section">
+    <h2 class="section-header">Upcoming Classes</h2>
+    <div id="upcoming-container" class="grid-container"></div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
