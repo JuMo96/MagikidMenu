@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (rows.length === 0) return;
       const headers = rows[0].map(h => h.trim());
       const records = rows.slice(1);
-
+      
       // Determine column indices (case-insensitive)
       const classNameIndex = headers.findIndex(h => h.toLowerCase() === "class name");
       const teacherIndex = headers.findIndex(h => h.toLowerCase() === "teacher");
@@ -48,12 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const endTimeIndex = headers.findIndex(h => h.toLowerCase() === "end time");
       const classroomIndex = headers.findIndex(h => h.toLowerCase() === "classroom");
 
-      // Get containers for each section
+      // Get containers for ongoing and upcoming sections
       const ongoingContainer = document.getElementById('ongoing-container');
       const upcomingContainer = document.getElementById('upcoming-container');
       const now = new Date();
       const twoAndHalfHoursInMs = 2.5 * 60 * 60 * 1000;
-      const thirtyMinutesInMs = 30 * 60 * 1000;
 
       records.forEach(record => {
         if (record.length === 1 && record[0].trim() === "") return;
@@ -86,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
             );
           }
         }
-
         // Remove classes that have concluded (current time is past the end time)
         if (endTimeDate && now >= endTimeDate) return;
 
@@ -94,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'class-card';
 
-        // Set card background using classroom mapping (fallback to default)
+        // Set card background using the classroom color mapping
         let classroomVal = (classroomIndex !== -1) ? record[classroomIndex].trim().toLowerCase() : "";
         let bgColor = vibrantColors[classroomVal] || vibrantColors.default;
         card.style.backgroundColor = bgColor;
@@ -103,27 +101,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = document.createElement('div');
         content.className = 'card-content';
 
-        // Class Name header (green if ongoing)
         const title = document.createElement('h3');
         title.textContent = record[classNameIndex];
+        // If ongoing, check for "competition team" to use yellow; otherwise green.
         if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
-          title.style.color = "green";
+          if (record[classNameIndex].trim().toLowerCase() === "competition team") {
+            title.style.color = "yellow";
+          } else {
+            title.style.color = "green";
+          }
+        } else {
+          title.style.color = "#fff";
         }
         content.appendChild(title);
 
-        // Teacher detail (remove "Teacher: " prefix)
         const teacher = document.createElement('p');
         teacher.textContent = record[teacherIndex];
         content.appendChild(teacher);
 
-        // Time detail (remove "Time: " prefix)
         const timeDetail = document.createElement('p');
         timeDetail.textContent = `${convertTo12Hour(record[startTimeIndex].trim())} - ${convertTo12Hour(record[endTimeIndex].trim())}`;
         content.appendChild(timeDetail);
 
         card.appendChild(content);
 
-        // Categorize card into ongoing or upcoming:
+        // Separate cards into ongoing or upcoming sections.
         if (startTimeDate && now >= startTimeDate && now < endTimeDate) {
           ongoingContainer.appendChild(card);
         } else if (startTimeDate && now < startTimeDate && (startTimeDate.getTime() - now.getTime()) < twoAndHalfHoursInMs) {
