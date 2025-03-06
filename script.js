@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${hour}:${minute} ${ampm}`;
   }
 
-  // Vibrant color mapping for classrooms with improved saturation.
+  // Vibrant color mapping for classrooms.
   const vibrantColors = {
     lobby: "#C0C0C0",   // Bright silver for lobby
     blue: "#007BFF",    // Vibrant blue
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     default: "#17A2B8"  // Vibrant teal as default
   };
 
-  // Determine the current day and use that CSV file (e.g., monday.csv)
+  // Determine the current day's CSV file (e.g., monday.csv)
   const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const currentDay = dayNames[new Date().getDay()];
   const csvFile = `${currentDay}.csv`;
@@ -34,14 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return response.text();
     })
     .then(data => {
-      // Determine delimiter: tab vs comma
       const delimiter = data.includes("\t") ? "\t" : ",";
       const rows = data.trim().split('\n').map(row => row.split(delimiter));
       if (rows.length === 0) return;
       const headers = rows[0].map(h => h.trim());
       const records = rows.slice(1);
-      
-      // Determine column indices (case-insensitive)
+
+      // Get column indices (case-insensitive)
       const classNameIndex = headers.findIndex(h => h.toLowerCase() === "class name");
       const teacherIndex = headers.findIndex(h => h.toLowerCase() === "teacher");
       const startTimeIndex = headers.findIndex(h => h.toLowerCase() === "start time");
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       records.forEach(record => {
         if (record.length === 1 && record[0].trim() === "") return;
 
-        // Parse start and end times (assuming "HH:MM" format)
+        // Parse start and end times (assumes "HH:MM" format)
         let startTimeDate, endTimeDate;
         if (startTimeIndex !== -1) {
           const startTimeStr = record[startTimeIndex].trim();
@@ -85,14 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
             );
           }
         }
-        // Remove classes that have concluded (current time is past the end time)
+        // Exclude classes that have already concluded
         if (endTimeDate && now >= endTimeDate) return;
 
         // Create a card for the class
         const card = document.createElement('div');
         card.className = 'class-card';
 
-        // Set card background using the classroom color mapping
+        // Set card background using vibrant color mapping
         let classroomVal = (classroomIndex !== -1) ? record[classroomIndex].trim().toLowerCase() : "";
         let bgColor = vibrantColors[classroomVal] || vibrantColors.default;
         card.style.backgroundColor = bgColor;
@@ -103,13 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const title = document.createElement('h3');
         title.textContent = record[classNameIndex];
-        // If ongoing, check for "competition team" to use yellow; otherwise green.
+        // If ongoing, and if the class name is "competition team", use yellow; otherwise green; if not ongoing, white.
         if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
-          if (record[classNameIndex].trim().toLowerCase() === "competition team") {
-            title.style.color = "yellow";
-          } else {
-            title.style.color = "green";
-          }
+          title.style.color = (record[classNameIndex].trim().toLowerCase() === "competition team") ? "yellow" : "green";
         } else {
           title.style.color = "#fff";
         }
@@ -125,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         card.appendChild(content);
 
-        // Separate cards into ongoing or upcoming sections.
+        // Categorize into ongoing vs upcoming
         if (startTimeDate && now >= startTimeDate && now < endTimeDate) {
           ongoingContainer.appendChild(card);
         } else if (startTimeDate && now < startTimeDate && (startTimeDate.getTime() - now.getTime()) < twoAndHalfHoursInMs) {

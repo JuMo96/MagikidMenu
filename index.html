@@ -32,24 +32,24 @@
       color: #fff;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
-    /* Grid container for cards */
+    /* Flex container for cards; items arranged left-to-right and centered */
     .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 15px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    /* Each card is a square */
-    .class-card {
-      position: relative;
       width: 100%;
-      padding-top: 100%; /* Enforces square aspect ratio */
+    }
+    /* Each card is a fixed 200x200 square */
+    .class-card {
+      width: 200px;
+      height: 200px;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      position: relative;
     }
-    /* Overlay for card text with reduced opacity for vibrancy */
+    /* Overlay for card text */
     .card-content {
       position: absolute;
       top: 0;
