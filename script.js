@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const headers = rows[0].map(h => h.trim());
       const records = rows.slice(1);
 
-      // Get column indices (case-insensitive)
+      // Column indices (case-insensitive)
       const classNameIndex = headers.findIndex(h => h.toLowerCase() === "class name");
       const teacherIndex = headers.findIndex(h => h.toLowerCase() === "teacher");
       const startTimeIndex = headers.findIndex(h => h.toLowerCase() === "start time");
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             );
           }
         }
-        // Exclude classes that have already concluded
+        // Remove classes that have concluded
         if (endTimeDate && now >= endTimeDate) return;
 
         // Create a card for the class
@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const title = document.createElement('h3');
         title.textContent = record[classNameIndex];
-        // If ongoing, and if the class name is "competition team", use yellow; otherwise green; if not ongoing, white.
         if (startTimeDate && endTimeDate && now >= startTimeDate && now < endTimeDate) {
           title.style.color = (record[classNameIndex].trim().toLowerCase() === "competition team") ? "yellow" : "green";
         } else {
@@ -115,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         content.appendChild(teacher);
 
         const timeDetail = document.createElement('p');
+        timeDetail.className = "time-detail"; // assign new class for increased font size
         timeDetail.textContent = `${convertTo12Hour(record[startTimeIndex].trim())} - ${convertTo12Hour(record[endTimeIndex].trim())}`;
         content.appendChild(timeDetail);
 
