@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab Live Class Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -25,11 +25,19 @@
       color: #007BFF;
     }
 
+    /* NEW: Scaled wrapper */
+    #lab-map-wrapper {
+      transform: scale(0.7);
+      transform-origin: top center;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
     #lab-map {
       position: relative;
       width: 100%;
-      max-width: 1200px;
-      margin: auto;
+      max-width: 1920px; /* assumes your floorplan is 1920px wide */
       border: 2px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
@@ -53,8 +61,8 @@
 
     .class-label {
       position: absolute;
-      width: 180px;
-      max-width: 180px;
+      min-width: 120px;
+      min-height: 60px;
       padding: 10px;
       background: rgba(0, 123, 255, 0.9);
       color: white;
@@ -62,15 +70,9 @@
       text-align: center;
       font-size: 14px;
       line-height: 1.4;
-      pointer-events: auto;
+      pointer-events: none;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
       transform: translate(-50%, -50%);
-      transition: all 0.3s ease;
-    }
-
-    .class-label:hover {
-      background: rgba(0, 123, 255, 1);
-      cursor: pointer;
     }
 
     .class-label strong {
@@ -90,12 +92,14 @@
 
   <h2 class="section-header">Live Lab Class Map</h2>
 
-  <div id="lab-map">
-    <img src="floorplan.png" alt="Lab Layout Map" class="map-image" />
-    <div id="class-overlay"></div>
+  <div id="lab-map-wrapper">
+    <div id="lab-map">
+      <img src="floorplan.png" alt="Lab Layout Map" class="map-image" />
+      <div id="class-overlay"></div>
+    </div>
   </div>
 
-  <div class="footer-note">Ongoing classes are displayed at their classroom locations.</div>
+  <div class="footer-note">Ongoing classes are displayed based on current time and room location.</div>
 
   <script src="script.js"></script>
 </body>
