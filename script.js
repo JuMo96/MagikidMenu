@@ -1,33 +1,40 @@
-// Map classroom names to (x, y) % coordinates on the floorplan
+// Classroom layout mapping based on your floorplan.png
 const classroomCoords = {
-  "Blue": [20, 40],
-  "Orange": [70, 40],
-  "Yellow": [50, 70],
-  "Green": [85, 85],
-  "Lobby": [85, 85],  
+  "Orange":  { x: 79, y: 12, width: 220, height: 200 },
+  "Yellow":  { x: 79, y: 37, width: 220, height: 200 },
+  "Blue":    { x: 79, y: 63, width: 220, height: 200 },
+  "Green":   { x: 20, y: 63, width: 220, height: 200 },
+  "Purple":  { x: 20, y: 37, width: 220, height: 200 },
+  "Lobby":   { x: 50, y: 90, width: 200, height: 100 }
 };
 
 async function fetchSchedule() {
   try {
-    const response = await fetch("schedule.csv");
+    // Determine today's filename
+    const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const today = new Date();
+    const filename = `${dayNames[today.getDay()]}.csv`;
+
+    const response = await fetch(filename);
     const text = await response.text();
-    const rows = text.trim().split(/\r?\n/).slice(1); // Skip header
+    const rows = text.trim().split(/\r?\n/).slice(1);
 
     const now = new Date();
     const overlay = document.getElementById("class-overlay");
-    overlay.innerHTML = ""; // Clear previous elements
+    overlay.innerHTML = "";
 
     rows.forEach(row => {
       if (!row.trim()) return;
 
-    const cells = row.split(",").map(cell => cell.trim());
-    const [className, teacher, startTime, endTime, classroom] = cells;
+      const cells = row.split(",").map(c => c.trim());
+      const [className, teacher, startTime, endTime, classroom] = cells;
+
       if (!classroomCoords[classroom]) {
-        console.warn(`Unknown classroom: ${classroom}`);
+        console.warn("Unknown classroom:", classroom);
         return;
       }
 
-      // Convert times
+      // Parse time range
       const [startH, startM] = startTime.split(":").map(Number);
       const [endH, endM] = endTime.split(":").map(Number);
       const start = new Date();
@@ -35,21 +42,18 @@ async function fetchSchedule() {
       start.setHours(startH, startM, 0, 0);
       end.setHours(endH, endM, 0, 0);
 
-      // Show only ongoing classes
       if (now >= start && now <= end) {
-        const [xPercent, yPercent] = classroomCoords[classroom];
+        const { x, y, width, height } = classroomCoords[classroom];
 
-        const classDiv = document.createElement("div");
-        classDiv.className = "class-label";
-        classDiv.style.left = `${xPercent}%`;
-        classDiv.style.top = `${yPercent}%`;
-        classDiv.innerHTML = `
-          <strong>${className}</strong>
-          ${teacher}<br>
-          ${startTime} - ${endTime}
-        `;
-
-        overlay.appendChild(classDiv);
+        const div = document.createElement("div");
+        div.className = "class-label";
+        div.setAttribute("data-classroom", classroom);
+        div.style.left = `${x}%`;
+        div.style.top = `${y}%`;
+        div.style.width = `${width}px`;
+        div.style.height = `${height}px`;
+        div.innerHTML = `<strong>${className}</strong>${teacher}<br>${startTime} - ${endTime}`;
+        overlay.appendChild(div);
       }
     });
 
@@ -59,6 +63,6 @@ async function fetchSchedule() {
   }
 }
 
-// Run once on load, then every 60 seconds
+// Load schedule initially and every 60 seconds
 fetchSchedule();
 setInterval(fetchSchedule, 60000);
