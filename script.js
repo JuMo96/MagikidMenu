@@ -4,8 +4,7 @@ const classroomCoords = {
   "Orange": [70, 40],
   "Yellow": [50, 70],
   "Green": [85, 85],
-  "Lobby": [85, 85],
-  // Add more mappings as needed based on your floorplan.png
+  "Lobby": [85, 85],  
 };
 
 async function fetchSchedule() {
@@ -21,8 +20,8 @@ async function fetchSchedule() {
     rows.forEach(row => {
       if (!row.trim()) return;
 
-      const [className, teacher, startTime, endTime, classroom] = row.split(",").map(cell => cell.trim());
-
+    const cells = row.split(",").map(cell => cell.trim());
+    const [className, teacher, startTime, endTime, classroom] = cells;
       if (!classroomCoords[classroom]) {
         console.warn(`Unknown classroom: ${classroom}`);
         return;
