@@ -3,109 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Class Schedules</title>
-  <!-- Google Fonts: Montserrat -->
+  <title>Lab Live Class Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Optional: Bootstrap for base styling -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <style>
-    /* Company colors gradient: Black, Blue, and White */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(45deg, #000000, #007BFF, #ffffff);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: #333;
+      background: #f0f4f8;
+      color: #222;
     }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    /* Section headers */
-    .section-header {
+
+    h2.section-header {
       text-align: center;
-      margin: 30px 0 15px;
-      font-size: 2em;
-      color: #fff;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+      margin: 20px 0;
+      font-size: 2rem;
+      color: #007BFF;
     }
-    /* Flex container for sections */
-    #ongoing-section, #upcoming-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+
+    #lab-map {
+      position: relative;
       width: 100%;
-    }
-    /* Grid container for cards using flexbox */
-    .grid-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      width: 100%;
-    }
-    /* Each card is a fixed 220x220 square */
-    .class-card {
-      width: 220px;
-      height: 220px;
+      max-width: 1200px;
+      margin: auto;
+      border: 2px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-      position: relative;
+      background: #000;
     }
-    /* Overlay for card text */
-    .card-content {
+
+    .map-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #class-overlay {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.35);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .class-label {
+      position: absolute;
+      width: 180px;
+      max-width: 180px;
+      padding: 10px;
+      background: rgba(0, 123, 255, 0.9);
+      color: white;
+      border-radius: 8px;
       text-align: center;
-      padding: 8px;
-      transition: background 0.3s ease;
+      font-size: 14px;
+      line-height: 1.4;
+      pointer-events: auto;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
     }
-    .card-content h3 {
-      margin: 0 0 8px;
-      font-size: 1.5em;
-      font-weight: 700;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+
+    .class-label:hover {
+      background: rgba(0, 123, 255, 1);
+      cursor: pointer;
     }
-    .card-content p {
-      margin: 4px 0;
-      font-size: 1.1em;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+
+    .class-label strong {
+      display: block;
+      font-size: 16px;
     }
-    /* Increased text size and boldness for time details */
-    .card-content .time-detail {
-      font-size: 1.3em;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    }
-    .class-card:hover .card-content {
-      background: rgba(0,0,0,0.45);
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <!-- Ongoing Classes Section -->
-  <div id="ongoing-section">
-    <h2 class="section-header">Ongoing Classes</h2>
-    <div id="ongoing-container" class="grid-container"></div>
+
+  <h2 class="section-header">Live Lab Class Map</h2>
+
+  <div id="lab-map">
+    <img src="floorplan.png" alt="Lab Layout Map" class="map-image" />
+    <div id="class-overlay"></div>
   </div>
-  <!-- Upcoming Classes Section -->
-  <div id="upcoming-section">
-    <h2 class="section-header">Upcoming Classes</h2>
-    <div id="upcoming-container" class="grid-container"></div>
-  </div>
+
+  <div class="footer-note">Ongoing classes are displayed at their classroom locations.</div>
+
   <script src="script.js"></script>
 </body>
 </html>
