@@ -1,10 +1,11 @@
 Class Name,Teacher,Start Time,End Time,Classroom
-Robot Rookie Basic,Miss Grace,15:30,15:00,Orange
-Robot Rookie Advanced,Mr. Juan,15:30,17:00,Yellow
-Robot Explorer Basic,Mr. Austin,15:30,17:00,Blue
-Robot Explorer Basic,Mr. Jesus,15:30,17:00,Lobby
-Scratch Jr,Miss Grace,17:10,18:10,Orange
-3D Printing,Mr. Juan,17:10,18:40,Yellow
-Scratch,Mr. Austin,17:10,18:10,Blue
-Robot Pioneer Advanced,Mr. Jesus,17:45,19:45,Lobby
-Robot Explorer Basic,Mr. Austin,18:15,19:45,Blue
+Robot Explorer I,Mr. Marcus,15:30,17:00,Blue
+Robot Rookie I,Miss Julie,15:30,17:00,Orange
+Robot Pioneer I, Mr. Juan, 15:40, 17:40,Lobby
+Robot Rookie II, Miss Jarisse, 15:30, 17:00, Lobby
+Private Coding, Mr. Jacob, 15:00, 16:00, Green
+Private Coding, Mr. Marcus, 17:00, 18:00, Green
+3D Printing, Miss Julie, 17:10, 18:40, Orange
+Python L3, Miss Jarisse, 17:45, 18:45, Lobby
+Robot Explorer II, Mr. Marcus, 18:00, 19:30, Green
+Private Coding, Mr. Juan, 18:45, 19:45, Lobby
