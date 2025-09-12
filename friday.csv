@@ -1,9 +1,9 @@
 Class Name,Teacher,Start Time,End Time,Classroom
-Robot Explorer I,Mr. Marcus,15:30,17:00,Blue
-Robot Rookie I,Miss Julie,15:30,17:00,Orange
-Robot Pioneer I, Mr. Juan, 15:40, 17:40,Lobby
-Robot Rookie II, Miss Jarisse, 15:30, 17:00, Lobby
-Private Coding, Mr. Jacob, 15:00, 16:00, Green
+Robot Explorer I,Mr. Marcus,12:30,17:00,Blue
+Robot Rookie I,Miss Julie,12:30,17:00,Orange
+Robot Pioneer I, Mr. Juan, 12:40, 17:40,Lobby
+Robot Rookie II, Miss Jarisse, 12:30, 17:00, Yellow
+Private Coding, Mr. Jacob, 12:00, 16:00, Green
 Private Coding, Mr. Marcus, 17:00, 18:00, Green
 3D Printing, Miss Julie, 17:10, 18:40, Orange
 Python L3, Miss Jarisse, 17:45, 18:45, Lobby
