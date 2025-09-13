@@ -25,19 +25,27 @@
       color: #007BFF;
     }
 
-    /* NEW: Scaled wrapper */
-    #lab-map-wrapper {
-      transform: scale(0.3);
-      transform-origin: top center;
-      width: 100%;
+    /* Flex layout: two columns */
+    #main-container {
       display: flex;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 20px 40px;
+    }
+
+    /* Left side (scaled map) */
+    #lab-map-wrapper {
+      transform: scale(1);
+      transform-origin: top left;
+      flex: 2;
+      overflow: hidden;
     }
 
     #lab-map {
       position: relative;
       width: 100%;
-      max-width: 1920px; /* assumes your floorplan is 1920px wide */
+      max-width: 1920px;
       border: 2px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
@@ -80,6 +88,33 @@
       font-size: 16px;
     }
 
+    /* Right column (upcoming classes) */
+    #upcoming-container {
+      flex: 1;
+      max-width: 500px;
+      background: #ffffff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-y: auto;
+      height: 85vh;
+    }
+
+    .upcoming-card {
+      background: #007BFF;
+      color: white;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .upcoming-card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
     .footer-note {
       text-align: center;
       font-size: 0.9rem;
@@ -92,14 +127,23 @@
 
   <h2 class="section-header">Live Lab Class Map</h2>
 
-  <div id="lab-map-wrapper">
-    <div id="lab-map">
-      <img src="floorplan.png" alt="Lab Layout Map" class="map-image" />
-      <div id="class-overlay"></div>
+  <div id="main-container">
+    <!-- Left: Map and overlay -->
+    <div id="lab-map-wrapper">
+      <div id="lab-map">
+        <img src="floorplan.png" alt="Lab Layout Map" class="map-image" />
+        <div id="class-overlay"></div>
+      </div>
+    </div>
+
+    <!-- Right: Upcoming classes list -->
+    <div id="upcoming-container">
+      <h3>Upcoming Classes<br><small>(+2 hours from now)</small></h3>
+      <div id="upcoming-list"></div>
     </div>
   </div>
 
-  <div class="footer-note">Ongoing classes are displayed based on current time and room location.</div>
+  <div class="footer-note">Live classes appear on the map. Classes starting in 2+ hours are listed on the right.</div>
 
   <script src="script.js"></script>
 </body>
