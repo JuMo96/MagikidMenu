@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab Live Class Map</title>
+  <title>Lab Class Display</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --map-width: 40%; /* Adjust this to control how wide the map is */
+      --map-width: 65%; /* Adjust this to control how wide the map is */
     }
 
     * {
@@ -20,13 +20,6 @@
       font-family: 'Montserrat', sans-serif;
       background: #f0f4f8;
       color: #222;
-    }
-
-    h2.section-header {
-      text-align: center;
-      margin: 20px 0;
-      font-size: 2rem;
-      color: #007BFF;
     }
 
     #main-container {
@@ -101,6 +94,10 @@
       height: 85vh;
     }
 
+    #upcoming-container h3 {
+      margin-top: 0;
+    }
+
     .upcoming-card {
       background: #007BFF;
       color: white;
@@ -125,8 +122,6 @@
   </style>
 </head>
 <body>
-
-  <h2 class="section-header">Live Lab Class Map</h2>
 
   <div id="main-container">
     <!-- Left: Map and overlay -->
