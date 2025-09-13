@@ -1,4 +1,4 @@
-// === Classroom layout positions for floorplan ===
+// Room coordinates for the floorplan (positions + sizes)
 const classroomCoords = {
   "Orange":  { x: 79, y: 12, width: 220, height: 200 },
   "Yellow":  { x: 79, y: 37, width: 220, height: 200 },
@@ -8,7 +8,6 @@ const classroomCoords = {
   "Lobby":   { x: 50, y: 90, width: 200, height: 100 }
 };
 
-// === Load schedule for today ===
 async function fetchSchedule() {
   try {
     const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
@@ -17,7 +16,7 @@ async function fetchSchedule() {
 
     const response = await fetch(filename);
     const text = await response.text();
-    const rows = text.trim().split(/\r?\n/).slice(1); // skip header
+    const rows = text.trim().split(/\r?\n/).slice(1);
 
     const now = new Date();
     const overlay = document.getElementById("class-overlay");
@@ -36,7 +35,7 @@ async function fetchSchedule() {
         return;
       }
 
-      // Time parsing
+      // Parse time
       const [startH, startM] = startTime.split(":").map(Number);
       const [endH, endM] = endTime.split(":").map(Number);
       const classStart = new Date();
@@ -44,9 +43,9 @@ async function fetchSchedule() {
       classStart.setHours(startH, startM, 0, 0);
       classEnd.setHours(endH, endM, 0, 0);
 
-      const hoursUntilStart = (classStart - now) / (1000 * 60 * 60); // convert ms to hours
+      const hoursUntilStart = (classStart - now) / (1000 * 60 * 60);
 
-      // === Ongoing classes (on the map)
+      // === Ongoing class on the map
       if (now >= classStart && now <= classEnd) {
         const { x, y, width, height } = classroomCoords[classroom];
 
@@ -58,10 +57,10 @@ async function fetchSchedule() {
         div.style.width = `${width}px`;
         div.style.height = `${height}px`;
         div.innerHTML = `<strong>${className}</strong>${teacher}<br>${startTime} - ${endTime}`;
-        overlay.appendChild(div);
+        document.getElementById("class-overlay").appendChild(div);
       }
 
-      // === Upcoming classes (right panel)
+      // === Upcoming class (2+ hours away)
       else if (hoursUntilStart >= 2) {
         const upcoming = document.createElement("div");
         upcoming.className = "upcoming-card";
@@ -71,7 +70,7 @@ async function fetchSchedule() {
           ${startTime} - ${endTime}<br>
           <em>Room: ${classroom}</em>
         `;
-        upcomingList.appendChild(upcoming);
+        document.getElementById("upcoming-list").appendChild(upcoming);
       }
     });
 
@@ -81,6 +80,6 @@ async function fetchSchedule() {
   }
 }
 
-// === Run on load and every 60 seconds ===
+// Run on load and refresh every 60 seconds
 fetchSchedule();
 setInterval(fetchSchedule, 60000);

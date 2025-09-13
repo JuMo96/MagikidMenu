@@ -6,6 +6,10 @@
   <title>Lab Live Class Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --map-width: 65%; /* Adjust this to control how wide the map is */
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -25,7 +29,6 @@
       color: #007BFF;
     }
 
-    /* Flex layout: two columns */
     #main-container {
       display: flex;
       flex-direction: row;
@@ -34,18 +37,16 @@
       padding: 0 20px 40px;
     }
 
-    /* Left side (scaled map) */
+    /* Left: Scaled map wrapper */
     #lab-map-wrapper {
-      transform: scale(0.475);
+      width: var(--map-width);
       transform-origin: top left;
-      flex: 2;
       overflow: hidden;
     }
 
     #lab-map {
       position: relative;
       width: 100%;
-      max-width: 1920px;
       border: 2px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
@@ -88,7 +89,7 @@
       font-size: 16px;
     }
 
-    /* Right column (upcoming classes) */
+    /* Right: Upcoming class panel */
     #upcoming-container {
       flex: 1;
       max-width: 500px;
@@ -138,7 +139,7 @@
 
     <!-- Right: Upcoming classes list -->
     <div id="upcoming-container">
-      <h3>Upcoming Classes<br><small>(+2 hours from now)</small></h3>
+      <h3>Upcoming Classes<br><small>(2+ hours from now)</small></h3>
       <div id="upcoming-list"></div>
     </div>
   </div>
