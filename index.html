@@ -7,7 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --map-width: 40%; /* Adjust this to control how wide the map is */
+      --map-width: 40%; /* Adjust to control map width */
+      --upcoming-width: 50%; /* Adjust to control upcoming panel width */
     }
 
     * {
@@ -25,16 +26,19 @@
     #main-container {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: flex-start;
       gap: 20px;
-      padding: 0 20px 40px;
+      padding: 20px;
     }
 
-    /* Left: Scaled map wrapper */
+    /* Left: Map */
     #lab-map-wrapper {
       width: var(--map-width);
       transform-origin: top left;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
     }
 
     #lab-map {
@@ -82,16 +86,15 @@
       font-size: 16px;
     }
 
-    /* Right: Upcoming class panel */
+    /* Right: Upcoming classes */
     #upcoming-container {
-      flex: 1;
-      max-width: 500px;
+      width: var(--upcoming-width);
       background: #ffffff;
       border: 2px solid #ccc;
       border-radius: 8px;
       padding: 20px;
       overflow-y: auto;
-      height: 85vh;
+      max-height: 85vh;
     }
 
     #upcoming-container h3 {
@@ -118,6 +121,18 @@
       font-size: 0.9rem;
       color: #666;
       margin: 20px 0;
+    }
+
+    @media screen and (max-width: 1024px) {
+      #main-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #lab-map-wrapper,
+      #upcoming-container {
+        width: 100%;
+      }
     }
   </style>
 </head>
